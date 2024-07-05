@@ -68,3 +68,11 @@ Discrete Logarithm Tools
 - Index Calculus Discrete Logarithm
 - Variant of the Index Calculus Discrete Logarithm
 - Index Calculus B-Smooth Number Finder
+
+--- 
+
+**Third-Party Software Used**
+
+- JLaTeXMath: (by Calixte Denizet and Sylvestre Ledru): One component in the matrix workspace display framework of the modular matrix calculator.
+- Oracle Help for Java: (Oracle): The help system.
+- JFreeChart: (by David Gilbert): Renders all of the bar charts in the program.
