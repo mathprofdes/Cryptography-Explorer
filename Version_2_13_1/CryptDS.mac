@@ -1,0 +1,171 @@
+
+from_cf(L):=ratsimp(cfdisrep(L))$
+
+from_cf_n(L, n):=ratsimp(cfdisrep(makelist(L[i], i, 1, n)))$
+
+rref(a):=block([r,c,pc,pcf],[r,c]:matrix_size(a),a:echelon(a),
+for i:r thru 2 step -1 do (
+pc:0,pcf:false,
+for j:1 thru c do (
+if (a[i,j]=1 and pcf=false) then (pc:j,pcf:true)),
+if pcf then (for j:1 thru i-1 do (a:rowop(a,j,i,a[j,pc])))),
+a)$
+
+mat_mod_inverse(M, n):=block(
+[TEMPMAT, DET, GCD, INVDET, MADJ, MADJINVDET],
+TEMPMAT:mod(M, n),
+DET:mod(determinant(TEMPMAT), n),
+GCD:gcd(DET, n),
+if GCD # 1 then return (false),
+INVDET:inv_mod(DET, n),
+MADJ:adjoint(TEMPMAT),
+MADJINVDET:INVDET*MADJ,
+mod(MADJINVDET, n)
+)$
+
+mod_echelon(a,n):=block([r,c,k,pc,rn,cn,m,pcf,zpos1,zpos2,cm],
+[r,c]:matrix_size(a),a:mod(a,n),
+pc:1,
+for i:1 thru r do (
+if (pc > c) then return(),
+pcf:false,
+for j:i thru r do (
+k:a[j,pc],
+if (k#0 and gcd(k,n)=1) then (a:rowswap(a,i,j),pcf:true,return())),
+if pcf then (
+ik:inv_mod(k,n),
+for cn:1 thru c do (a[i,cn]:mod(ik*a[i,cn],n)),
+for rn:i+1 thru r do (
+m:a[rn,pc],
+for cn:1 thru c do (a[rn,cn]:mod(-a[i,cn]*m+a[rn,cn],n)))),
+pc:pc+1),
+for j:1 thru r-1 do (
+cm:false,
+for i:1 thru r-1 do (
+zpos1:c+1,zpos2:c+1,
+for cn:1 thru c do (if (a[i,cn]#0 and zpos1=c+1) then (zpos1:cn)),
+for cn:1 thru c do (if (a[i+1,cn]#0 and zpos2=c+1) then (zpos2:cn)),
+if zpos1 > zpos2 then (a:rowswap(a,i,i+1),cm:true)),
+if not cm then return()),
+a)$
+
+mod_rref(a,n):=block([r,c,k,pc,rn,cn,m,pcf,npc,zpos1,zpos2,cm],
+[r,c]:matrix_size(a),a:mod(a,n),
+pc:1,
+for i:1 thru r do (
+if (pc > c) then return(),
+pcf:false,
+for j:i thru r do (
+k:a[j,pc],
+if (k#0 and gcd(k,n)=1) then (a:rowswap(a,i,j),pcf:true,return())),
+if pcf then (
+ik:inv_mod(k,n),
+for cn:1 thru c do (a[i,cn]:mod(ik*a[i,cn],n)),
+for rn:i+1 thru r do (
+m:a[rn,pc],
+for cn:1 thru c do (a[rn,cn]:mod(-a[i,cn]*m+a[rn,cn],n)))),
+pc:pc+1),
+for i:r thru 2 step -1 do (
+pcf:false,npc:false,
+for j:1 thru c do (
+k:a[i,j],
+if (k#0) then (if (k=1) then (pc:j,pcf:true) else npc:true),
+if (pcf or npc) then return()),
+if pcf then (
+for rn:i-1 thru 1 step -1 do (
+m:a[rn,pc],
+for cn:1 thru c do (a[rn,cn]:mod(-a[i,cn]*m+a[rn,cn],n))))),
+for j:1 thru r-1 do (
+cm:false,
+for i:1 thru r-1 do (
+zpos1:c+1,zpos2:c+1,
+for cn:1 thru c do (if (a[i,cn]#0 and zpos1=c+1) then (zpos1:cn)),
+for cn:1 thru c do (if (a[i+1,cn]#0 and zpos2=c+1) then (zpos2:cn)),
+if zpos1 > zpos2 then (a:rowswap(a,i,i+1),cm:true)),
+if not cm then return()),
+a)$
+
+ec_points(b,c,n):=block([a,lhsv,rhsv],a:[],
+for x:0 thru n-1 do (
+for y:0 thru n-1 do (
+lhsv:mod(y^2, n),rhsv:mod(x^3+b*x+c, n),
+if (lhsv=rhsv) then (a:append(a,[[x,y]])))),
+a)$
+
+ec_allpoints(b,c,n):=block([a,t],a:ec_points(b,c,n),t:inf,
+a:append(a,[t]),
+a)$
+
+ec_pointAdd(b,c,n,p1,p2):=block([a,m,invy,x,y,err],err:false,
+if (p1=inf) then return(p2),
+if (p2=inf) then return(p1),
+if (p1=Error) then err:true,
+if (p2=Error) then err:true,
+if (err) then a:0 else (
+if (p1=p2) then (
+                if (mod(2*p1[2],n) = 0) then return(inf),
+                if (gcd(2*p1[2],n) > 1) then err:true,
+                invy:power_mod(2*p1[2],-1,n),
+                m:mod((3*p1[1]^2+b)*invy,n)
+            ) else (
+                if (mod(p1[1],n)=mod(p2[1], n)) then return(inf),
+                if (gcd(p1[1]-p2[1],n) > 1) then err:true,
+                invy:power_mod(p1[1]-p2[1],-1,n),
+                m:mod((p1[2]-p2[2])*invy,n)
+            ),
+x:mod(m^2-p1[1]-p2[1], n),
+y:mod(m*(p1[1]-x)-p1[2], n),
+a:[x,y]),
+if (err) then Error else a)$
+
+ec_pointScalarMult(b,c,n,t,p1):=block([pt,w],pt:inf,w:true,
+    if (t < 0) then (t:-t, p1[2]:mod(-p1[2],n)),
+    while (w)  do (
+        if (mod(t,2)=1) then pt:ec_pointAdd(b,c,n,pt,p1),
+        p1:ec_pointAdd(b,c,n,p1,p1),
+        t:floor(t/2),
+        if (t=0) then w:false
+    ),pt)$
+
+ec_pointOnCurve(b,c,n,pt):=block([lhsv,rhsv],
+lhsv:mod(pt[2]^2, n),
+rhsv:mod(pt[1]^3+b*pt[1]+c, n),
+if (lhsv=rhsv) then true else false)$
+
+ec_pointFactorialScalarMult(b,c,n,t,p1):=block([i,pt],pt:p1,
+    for i:2 thru t do (pt:ec_pointScalarMult(b,c,n,i,pt)),
+pt)$
+
+ec_order(b,c,n):=block([a,lhsv,rhsv,x,y],a:1,
+for x:0 thru n-1 do (
+for y:0 thru n-1 do (
+lhsv:mod(y^2, n),rhsv:mod(x^3+b*x+c, n),
+if (lhsv=rhsv) then (a:a+1))),
+a)$
+
+ec_pointWithX(b,c,n,x):=block([y,r],r:none,
+for y:0 thru n-1 do (
+        if (ec_pointOnCurve(b,c,n,[x,y])) then (r:[x,y], y:n)
+),r)$
+
+ec_pointWithY(b,c,n,y):=block([x,r],r:none,
+for x:0 thru n-1 do (
+        if (ec_pointOnCurve(b,c,n,[x,y])) then (r:[x,y], x:n)
+),r)$
+
+ec_generateCurveConstant(b,n,pt):=block(
+    mod(pt[2]^2-(pt[1]^3+b*pt[1]), n)
+)$
+
+ec_pointOrder(b,c,n,pt):=block([p,i,r,w],w:true,i:1,
+while (w)  do (
+        p:ec_pointScalarMult(b,c,n,i,pt),
+        if (p=inf) then (r:i, w:false),
+        i:i+1
+),r)$
+
+ec_plot(b,c,n):=block([pts],
+    pts:ec_points(b,c,n),
+    plot2d([discrete,pts],[style,points])
+)$
+
