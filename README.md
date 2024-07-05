@@ -5,3 +5,5 @@ The Cryptography Explorer program was developed for the investigation of cryptog
 The software is being distributed as an executable jar file.  In most cases you can simply download the CryptographyExplorer.jar file (raw file), from the version directory and double-click it from your system's file browser.  You can also run it from the command-line with 
 
 `java -jar CryptographyExplorer.jar`
+
+The software was created using the older Java Swing API, so the appearance is a little retro. 
