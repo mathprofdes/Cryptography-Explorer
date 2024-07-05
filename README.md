@@ -6,4 +6,4 @@ The software is being distributed as an executable jar file.  In most cases you 
 
 `java -jar CryptographyExplorer.jar`
 
-The software was created using the older Java Swing API, so the appearance is a little retro. 
+The software was created using the older Java Swing API, so the appearance is a little retro. This software has been tested on Windows 10 and 11, Linux Mint 21, and MacOS Mojave.
