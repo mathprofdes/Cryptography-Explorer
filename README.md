@@ -1,5 +1,24 @@
 # Cryptography Explorer
 
+**Download the Current Version (2.13.1)**
+
+**Prerequisite:** If the Java JRE is not installed on your computer download and install the current version of the Java JRE (Version 8 or later).
+
+The software is being distributed as an executable jar file. 
+
+- Download the **[CryptographyExplorer.jar](https://github.com/mathprofdes/Cryptography-Explorer/releases/download/v2.13.1/CryptographyExplorer.jar)** file.
+- In most cases you can simply double-click it from your system's file browser. You can also run it from the command-line with
+`java -jar CryptographyExplorer.jar`
+
+**Other Files:**
+- **[CryptographyNotes.pdf](https://github.com/mathprofdes/Cryptography-Explorer/releases/download/v2.13.1/CryptographyNotes.pdf)** - A set of notes used as textbook supplements when teaching Cryptography.
+- **[CryptographyTechnologySections.pdf](https://github.com/mathprofdes/Cryptography-Explorer/releases/download/v2.13.1/CryptographyTechnologySections.pdf)** - The technology sections of the Cryptography Notes document with examples of using this software package as well as Mathematica and Maxima.
+- **[CryptDS.mac](https://github.com/mathprofdes/Cryptography-Explorer/releases/download/v2.13.1/CryptDS.mac)** - A maxima support package with added matrix and elliptic curve functions.
+
+---
+
+**Program Description**
+
 The Cryptography Explorer program was developed for the investigation of cryptography and cryptanalysis. It was developed as a teaching tool to try to remove the tedious calculations but still require the user to make the decisions for the processes and analysis. This is a Java application, so if the Java JRE is not installed on your computer download and install the current version of the Java JRE (Version 8 or later).
 
 The software is being distributed as an executable jar file.  In most cases you can simply download the CryptographyExplorer.jar file (raw file), from the version directory and double-click it from your system's file browser.  You can also run it from the command-line with 
